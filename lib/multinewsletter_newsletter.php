@@ -94,10 +94,10 @@ class MultinewsletterNewsletter extends MultinewsletterAbstract
 
 		$content = str_replace("src='index.php", "src='". (rex_addon::get('yrewrite')->isAvailable() ? rex_yrewrite::getCurrentDomain()->getUrl() : rex::getServer()) .'index.php', $content);
 		$content = str_replace('src="index.php', 'src="'. (rex_addon::get('yrewrite')->isAvailable() ? rex_yrewrite::getCurrentDomain()->getUrl() : rex::getServer()) .'index.php', $content);
-		
+
 		// Correct image URLs
 		$content = str_replace('&amp;', '&', $content);
-		
+
 		return $content;
     }
 
@@ -121,20 +121,20 @@ class MultinewsletterNewsletter extends MultinewsletterAbstract
         }
 
         return stripslashes(
-			strtr($content, rex_extension::registerPoint(
-				new rex_extension_point(
-					'multinewsletter.replaceVars', array_merge(
-						$replaces, [
-							'+++TITLE+++'				=> htmlspecialchars($addon->getConfig('lang_' . $ulang . "_title_" . $user->getValue('title')), ENT_QUOTES),
-							'+++ABMELDELINK+++'			=> self::getUrl($addon->getConfig('link_abmeldung'), $ulang, ['unsubscribe' => $user->getValue('email')]),
-							'+++AKTIVIERUNGSLINK+++'	=> self::getUrl($addon->getConfig('link'), $ulang, ['activationkey' => $user->getValue('activationkey'), 'email' => $user->getValue('email')]),
-							'+++NEWSLETTERLINK+++'		=> $newsletter_article ? self::getUrl($newsletter_article->getId(), $ulang, ['email' => $user->getValue('email')]) : '',
-							'+++LINK_PRIVACY_POLICY+++'	=> rex_getUrl(rex_config::get('d2u_helper', 'article_id_privacy_policy', rex_article::getSiteStartArticleId())),
-							'+++LINK_IMPRESS+++'		=> rex_getUrl(rex_config::get('d2u_helper', 'article_id_impress', rex_article::getSiteStartArticleId())),
-						])
-					)
+            strtr($content, rex_extension::registerPoint(
+                new rex_extension_point(
+                    'multinewsletter.replaceVars', array_merge(
+                        $replaces, [
+                            '+++TITLE+++'				=> htmlspecialchars($addon->getConfig('lang_' . $ulang . "_title_" . $user->getValue('title')), ENT_QUOTES),
+                            '+++ABMELDELINK+++'			=> self::getUrl($addon->getConfig('link_abmeldung'), $ulang, ['unsubscribe' => $user->getValue('email')]),
+                            '+++AKTIVIERUNGSLINK+++'	=> self::getUrl($addon->getConfig('link'), $ulang, ['activationkey' => $user->getValue('activationkey'), 'email' => $user->getValue('email')]),
+                            '+++NEWSLETTERLINK+++'		=> $newsletter_article ? self::getUrl($newsletter_article->getId(), $ulang, ['email' => $user->getValue('email')]) : '',
+                            '+++LINK_PRIVACY_POLICY+++'	=> rex_getUrl(rex_config::get('d2u_helper', 'article_id_privacy_policy', rex_article::getSiteStartArticleId())),
+                            '+++LINK_IMPRESS+++'		=> rex_getUrl(rex_config::get('d2u_helper', 'article_id_impress', rex_article::getSiteStartArticleId())),
+                        ])
+				    )
 				)
-			)	
+			)
 		);
     }
 	
@@ -163,8 +163,7 @@ class MultinewsletterNewsletter extends MultinewsletterAbstract
      * @param type $clang_id Sprachen ID aus Redaxo
      * @return boolean
      */
-    private function readArticle($article_id, $clang_id)
-    {
+    private function readArticle($article_id, $clang_id) {
         $article   = rex_article::get($article_id, $clang_id);
         $article_content = new rex_article_content($article_id, $clang_id);
 
@@ -180,8 +179,7 @@ class MultinewsletterNewsletter extends MultinewsletterAbstract
     /**
      * Aktualisiert den Newsletter in der Datenbank.
      */
-    public function save()
-    {
+    public function save() {
         $this->setValue('setupdate', $this->getValue('setupdate', date('Y-m-d H:i:s')));
 
         $sql = rex_sql::factory();
@@ -343,7 +341,7 @@ class MultinewsletterNewsletterManager
      */
     private function initRecipients($numberMails = 0)
     {
-        $query = "SELECT id FROM " . rex::getTablePrefix() . "375_user " . "WHERE send_archive_id > 0 " . "ORDER BY email";
+        $query = "SELECT id FROM " . rex::getTablePrefix() . "375_user WHERE send_archive_id > 0 ORDER BY email";
         if ($numberMails > 0) {
             $query .= " LIMIT 0, " . $numberMails;
         }
@@ -364,7 +362,7 @@ class MultinewsletterNewsletterManager
     public function countRemainingUsers()
     {
         if ($this->remaining_users == 0) {
-            $query  = "SELECT COUNT(*) as total FROM " . rex::getTablePrefix() . "375_user " . "WHERE send_archive_id > 0 ";
+            $query  = "SELECT COUNT(*) as total FROM " . rex::getTablePrefix() . "375_user WHERE send_archive_id > 0 ";
             $result = rex_sql::factory();
             $result->setQuery($query);
 
