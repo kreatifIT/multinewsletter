@@ -144,8 +144,8 @@ class MultinewsletterUser extends MultinewsletterAbstract
     public function save()
     {
         // todo: throw error on wrong email
-        if (filter_var($this->getValue('email'), FILTER_VALIDATE_EMAIL) === false) {
-            $this->setValue('email', '');
+        if (filter_var(trim($this->getValue('email')), FILTER_VALIDATE_EMAIL) === false) {
+            $this->setValue('status', 0);
         }
 		if(!isset($this->data['createdate'])) {
 			$this->setValue('createdate', $this->getValue('createdate', date('Y-m-d H:i:s')));
