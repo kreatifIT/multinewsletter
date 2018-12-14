@@ -7,7 +7,7 @@ if(class_exists(D2UModuleManager)) {
 		3);
 	$d2u_multinewsletter_modules[] = new D2UModule("80-2",
 		"MultiNewsletter Abmeldung",
-		3);
+		4);
 	$d2u_multinewsletter_modules[] = new D2UModule("80-3",
 		"MultiNewsletter Anmeldung nur mit Mail",
 		3);
@@ -87,9 +87,19 @@ $sql->setQuery("SHOW COLUMNS FROM ". \rex::getTablePrefix() ."375_user LIKE 'pri
 if($sql->getRows() == 0) {
 	$sql->setQuery("ALTER TABLE `". \rex::getTablePrefix() ."375_user` ADD `privacy_policy_accepted` TINYINT(1) NOT NULL DEFAULT 0 AFTER `activationkey`;");
 }
+// 3.1.7 Update database
+$sql->setQuery("ALTER TABLE `" . rex::getTablePrefix() . "375_user` CHANGE `activationkey` `activationkey` VARCHAR(45) NULL DEFAULT NULL;");
+// 3.1.8 Update database
+$sql->setQuery("ALTER TABLE `" . rex::getTablePrefix() . "375_user` CHANGE `send_archive_id` `send_archive_id` INT(11) UNSIGNED NOT NULL AUTO_INCREMENT;");
 
 // Update modules
 if(class_exists(D2UModuleManager) && class_exists(D2UMultiNewsletterModules)) {
 	$d2u_module_manager = new D2UModuleManager(D2UMultiNewsletterModules::getD2UMultiNewsletterModules(), "modules/", "multinewsletter");
 	$d2u_module_manager->autoupdate();
 }
+
+// 3.1.6 GDPR update
+if($this->hasConfig('unsubscribe_action')) {
+	$this->removeConfig('unsubscribe_action');
+}
+$sql->setQuery('DELETE FROM ' . rex::getTablePrefix() . '375_user WHERE `status` = 2;');

@@ -9,6 +9,7 @@ class MultinewsletterNewsletter extends MultinewsletterAbstract
 {
     /**
      * Stellt die Daten des Archivs aus der Datenbank zusammen.
+     *
      * @param int $archive_id Archiv ID aus der Datenbank.
      */
     public function __construct($id)
@@ -25,8 +26,10 @@ class MultinewsletterNewsletter extends MultinewsletterAbstract
 
     /**
      * Stellt die Daten des Archivs aus der Datenbank zusammen.
-     * @param int $article_id Artikel ID aus Redaxo.
-     * @param type $clang_id Sprachen ID aus Redaxo
+     *
+     * @param int  $article_id Artikel ID aus Redaxo.
+     * @param type $clang_id   Sprachen ID aus Redaxo
+     *
      * @return MultinewsletterNewsletter Intialisiertes Multinewsletter Objekt.
      */
     public static function factory($article_id, $clang_id = null)
@@ -51,8 +54,11 @@ class MultinewsletterNewsletter extends MultinewsletterAbstract
 
     /**
      * Personalisiert einen String
-     * @param String $content Zu personalisierender Inhalt
-     * @param MultinewsletterUser $user Empfänger der Testmail
+     *
+     * @param String              $content    Zu personalisierender Inhalt
+     * @param MultinewsletterUser $user       Empfänger der Testmail
+     * @param                     rex_article Redaxo article ID
+     *
      * @return String Personalisierter String.
      */
     public static function personalize($content, $user, $article = null)
@@ -62,15 +68,87 @@ class MultinewsletterNewsletter extends MultinewsletterAbstract
 
     public static function getUrl($id = null, $clang = null, array $params = [])
     {
-        if (rex_addon::get('yrewrite') && rex_addon::get('yrewrite')->isAvailable()) {
+        if (rex_addon::get('yrewrite') && rex_addon::get('yrewrite')
+                ->isAvailable()
+        ) {
             $url = rex_getUrl($id, $clang, $params);
-        }
-        else {
+        } else {
             $url = rtrim(rex::getServer(), '/') . '/' . ltrim(str_replace(['../', './'], '', rex_getUrl($id, $clang, $params)), '/');
         }
         return $url;
     }
 
+    /**
+     * Personalisiert einen String
+     *
+     * @param String $content Zu personalisierender Inhalt
+     *
+     * @return String Personalisierter String.
+     */
+    public static function replaceURLs($content)
+    {
+        $content = str_replace('href="/', 'href="' . (rex_addon::get('yrewrite')
+                ->isAvailable() ? rex_yrewrite::getCurrentDomain()
+                ->getUrl() : rex::getServer()), $content);
+        $content = str_replace('href="./', 'href="' . (rex_addon::get('yrewrite')
+                ->isAvailable() ? rex_yrewrite::getCurrentDomain()
+                ->getUrl() : rex::getServer()), $content);
+        $content = str_replace('href="../', 'href="' . (rex_addon::get('yrewrite')
+                ->isAvailable() ? rex_yrewrite::getCurrentDomain()
+                ->getUrl() : rex::getServer()), $content);
+
+        $content = str_replace("href='/", "href='" . (rex_addon::get('yrewrite')
+                ->isAvailable() ? rex_yrewrite::getCurrentDomain()
+                ->getUrl() : rex::getServer()), $content);
+        $content = str_replace("href='./", "href='" . (rex_addon::get('yrewrite')
+                ->isAvailable() ? rex_yrewrite::getCurrentDomain()
+                ->getUrl() : rex::getServer()), $content);
+        $content = str_replace("href='../", "href='" . (rex_addon::get('yrewrite')
+                ->isAvailable() ? rex_yrewrite::getCurrentDomain()
+                ->getUrl() : rex::getServer()), $content);
+
+        $content = str_replace('src="/', 'src="' . (rex_addon::get('yrewrite')
+                ->isAvailable() ? rex_yrewrite::getCurrentDomain()
+                ->getUrl() : rex::getServer()), $content);
+        $content = str_replace('src="./', 'src="' . (rex_addon::get('yrewrite')
+                ->isAvailable() ? rex_yrewrite::getCurrentDomain()
+                ->getUrl() : rex::getServer()), $content);
+        $content = str_replace('src="../', 'src="' . (rex_addon::get('yrewrite')
+                ->isAvailable() ? rex_yrewrite::getCurrentDomain()
+                ->getUrl() : rex::getServer()), $content);
+
+        $content = str_replace("src='/", "src='" . (rex_addon::get('yrewrite')
+                ->isAvailable() ? rex_yrewrite::getCurrentDomain()
+                ->getUrl() : rex::getServer()), $content);
+        $content = str_replace("src='./", "src='" . (rex_addon::get('yrewrite')
+                ->isAvailable() ? rex_yrewrite::getCurrentDomain()
+                ->getUrl() : rex::getServer()), $content);
+        $content = str_replace("src='../", "src='" . (rex_addon::get('yrewrite')
+                ->isAvailable() ? rex_yrewrite::getCurrentDomain()
+                ->getUrl() : rex::getServer()), $content);
+
+        $content = str_replace("src='index.php", "src='" . (rex_addon::get('yrewrite')
+                ->isAvailable() ? rex_yrewrite::getCurrentDomain()
+                ->getUrl() : rex::getServer()) . 'index.php', $content);
+        $content = str_replace('src="index.php', 'src="' . (rex_addon::get('yrewrite')
+                ->isAvailable() ? rex_yrewrite::getCurrentDomain()
+                ->getUrl() : rex::getServer()) . 'index.php', $content);
+
+        // Correct image URLs
+        $content = str_replace('&amp;', '&', $content);
+
+        return $content;
+    }
+
+    /**
+     * Personalisiert einen String
+     *
+     * @param String              $content    Zu personalisierender Inhalt
+     * @param                     rex_article Redaxo article
+     * @param MultinewsletterUser $user       Empfänger der Testmail
+     *
+     * @return String Personalisierter String.
+     */
     public static function replaceVars($content, $newsletter_article = null, $user = null)
     {
         $addon = rex_addon::get("multinewsletter");
@@ -84,52 +162,49 @@ class MultinewsletterNewsletter extends MultinewsletterAbstract
             $replaces['+++' . strtoupper($ukey) . '+++'] = $user->getValue($ukey, '');
         }
 
-        return stripslashes(
-			strtr($content, rex_extension::registerPoint(
-				new rex_extension_point(
-					'multinewsletter.replaceVars', array_merge(
-						$replaces, [
-							'+++TITLE+++'				=> htmlspecialchars($addon->getConfig('lang_' . $ulang . "_title_" . $user->getValue('title')), ENT_QUOTES),
-							'+++ABMELDELINK+++'			=> self::getUrl($addon->getConfig('link_abmeldung'), $ulang, ['unsubscribe' => $user->getValue('email')]),
-							'+++AKTIVIERUNGSLINK+++'	=> self::getUrl($addon->getConfig('link'), $ulang, ['activationkey' => $user->getValue('activationkey'), 'email' => $user->getValue('email')]),
-							'+++NEWSLETTERLINK+++'		=> $newsletter_article ? self::getUrl($newsletter_article->getId(), $ulang) : '',
-							'+++LINK_PRIVACY_POLICY+++'	=> rex_getUrl(rex_config::get('d2u_helper', 'article_id_privacy_policy', rex_article::getSiteStartArticleId())),
-							'+++LINK_IMPRESS+++'		=> rex_getUrl(rex_config::get('d2u_helper', 'article_id_impress', rex_article::getSiteStartArticleId())),
-						])
-					)
-				)
-			)	
-		);
+        return strtr($content, rex_extension::registerPoint(new rex_extension_point('multinewsletter.replaceVars', array_merge($replaces, [
+            '+++TITLE+++'               => htmlspecialchars($addon->getConfig('lang_' . $ulang . "_title_" . $user->getValue('title')), ENT_QUOTES),
+            '+++ABMELDELINK+++'         => self::getUrl($addon->getConfig('link_abmeldung'), $ulang, ['unsubscribe' => $user->getValue('email')]),
+            '+++AKTIVIERUNGSLINK+++'    => self::getUrl($addon->getConfig('link'), $ulang, ['activationkey' => $user->getValue('activationkey'), 'email' => $user->getValue('email')]),
+            '+++NEWSLETTERLINK+++'      => $newsletter_article ? self::getUrl($newsletter_article->getId(), $ulang, ['email' => $user->getValue('email')]) : '',
+            '+++LINK_PRIVACY_POLICY+++' => rex_getUrl(rex_config::get('d2u_helper', 'article_id_privacy_policy', rex_article::getSiteStartArticleId())),
+            '+++LINK_IMPRESS+++'        => rex_getUrl(rex_config::get('d2u_helper', 'article_id_impress', rex_article::getSiteStartArticleId())),
+        ]))));
     }
-	
-	/**
-	 * Get fallback lang settings
-	 * @param int $fallback_lang
-	 * @return int rex_clang fallback clang_id
-	 */
-    public static function getFallbackLang($fallback_lang = null) {
+
+    /**
+     * Get fallback lang settings
+     *
+     * @param int $fallback_lang
+     *
+     * @return int rex_clang fallback clang_id
+     */
+    public static function getFallbackLang($fallback_lang = null)
+    {
         $addon = rex_addon::get("multinewsletter");
 
-        if($addon->getConfig("lang_fallback", 0) == 0 && !is_null($fallback_lang)) {
+        if ($addon->getConfig("lang_fallback", 0) == 0 && !is_null($fallback_lang)) {
             return $fallback_lang;
-		}
+        }
 
-        if($addon->getConfig("lang_fallback", 0) == 0) {
+        if ($addon->getConfig("lang_fallback", 0) == 0) {
             return null;
-		}
+        }
 
         return rex_config::get("d2u_helper", "default_lang", $fallback_lang);
     }
 
     /**
      * Liest einen Redaxo Artikel aus.
+     *
      * @param type $article_id ArtikelID aus Redaxo
-     * @param type $clang_id Sprachen ID aus Redaxo
+     * @param type $clang_id   Sprachen ID aus Redaxo
+     *
      * @return boolean
      */
     private function readArticle($article_id, $clang_id)
     {
-        $article   = rex_article::get($article_id, $clang_id);
+        $article         = rex_article::get($article_id, $clang_id);
         $article_content = new rex_article_content($article_id, $clang_id);
 
         if ($article instanceof rex_article && $article->isOnline()) {
@@ -155,8 +230,7 @@ class MultinewsletterNewsletter extends MultinewsletterAbstract
         if ($this->getId()) {
             $sql->setWhere('id = :id', [':id' => $this->getId()]);
             $sql->update();
-        }
-        else {
+        } else {
             $sql->insert();
             $id = $sql->getLastId();
             $this->setValue('id', $id);
@@ -166,7 +240,9 @@ class MultinewsletterNewsletter extends MultinewsletterAbstract
 
     /**
      * Sendet eine Mail des Newsletters an übergebenen Nutzer
+     *
      * @param MultinewsletterUser $user Empfänger der Mail
+     *
      * @return boolean true, wenn erfolgreich versendet, sonst false
      */
     private function send($User, $article = null)
@@ -206,10 +282,10 @@ class MultinewsletterNewsletter extends MultinewsletterAbstract
             }
 
             $mail->Subject = $this->personalize($this->getValue('subject'), $User, $article);
-            $mail->Body    = $this->personalize($this->getValue('htmlbody'), $User, $article);
+            $body          = MultinewsletterNewsletter::personalize($this->getValue('htmlbody'), $User, $article);
+            $mail->Body    = MultinewsletterNewsletter::replaceURLs($body);
             return $mail->Send();
-        }
-        else {
+        } else {
             return false;
         }
     }
@@ -217,7 +293,9 @@ class MultinewsletterNewsletter extends MultinewsletterAbstract
     /**
      * Sendet eine Mail des Newsletters an übergebenen Nutzer und fügt ihn zu
      * den gesendeten Empfängern hinzu.
+     *
      * @param MultinewsletterUser $user Empfänger der Mail
+     *
      * @return boolean true, wenn erfolgreich versendet, sonst false
      */
     public function sendNewsletter($User, $article = null)
@@ -228,7 +306,8 @@ class MultinewsletterNewsletter extends MultinewsletterAbstract
 
             $this->setValue('recipients', $recipients);
             $this->setValue('sentdate', date('Y-m-d H:i:s'));
-            $this->setValue('sentby', rex::getUser()->getLogin());
+            $this->setValue('sentby', rex::getUser()
+                ->getLogin());
             $this->save();
             return true;
         }
@@ -238,7 +317,9 @@ class MultinewsletterNewsletter extends MultinewsletterAbstract
 
     /**
      * Sendet eine Testmail des Newsletters
+     *
      * @param MultinewsletterUser $testuser Empfänger der Testmail
+     *
      * @return boolean true, wenn erfolgreich versendet, sonst false
      */
     public function sendTestmail($testuser, $article_id)
@@ -277,6 +358,7 @@ class MultinewsletterNewsletterManager
 
     /**
      * Stellt die Daten des Newsletters aus einem Archiv zusammen.
+     *
      * @param int $numberMails Anzahl der Mails für den nächsten Versandschritt.
      */
     public function __construct($numberMails = 0)
@@ -304,11 +386,12 @@ class MultinewsletterNewsletterManager
 
     /**
      * Initialisiert die Newsletter Empfänger, die zum Versand ausstehen.
+     *
      * @param int $numberMails Anzahl der Mails für den nächsten Versandschritt.
      */
     private function initRecipients($numberMails = 0)
     {
-        $query = "SELECT id FROM " . rex::getTablePrefix() . "375_user " . "WHERE send_archive_id > 0 " . "ORDER BY email";
+        $query = "SELECT id FROM " . rex::getTablePrefix() . "375_user WHERE send_archive_id > 0 ORDER BY email";
         if ($numberMails > 0) {
             $query .= " LIMIT 0, " . $numberMails;
         }
@@ -329,23 +412,24 @@ class MultinewsletterNewsletterManager
     public function countRemainingUsers()
     {
         if ($this->remaining_users == 0) {
-            $query  = "SELECT COUNT(*) as total FROM " . rex::getTablePrefix() . "375_user " . "WHERE send_archive_id > 0 ";
+            $query  = "SELECT COUNT(*) as total FROM " . rex::getTablePrefix() . "375_user WHERE send_archive_id > 0 ";
             $result = rex_sql::factory();
             $result->setQuery($query);
 
             return $result->getValue("total");
-        }
-        else {
+        } else {
             return $this->remaining_users;
         }
     }
 
     /**
      * Bereitet den Versand des Newsletters vor.
-     * @param Array $group_ids Array mit den GruppenIDs der vorzubereitenden Gruppen.
-     * @param int $article_id ID des zu versendenden Redaxo Artikels
-     * @param int $fallback_clang_id ID der Sprache, die verwendet werden soll,
-     * wenn der Artikel offline ist.
+     *
+     * @param Array $group_ids         Array mit den GruppenIDs der vorzubereitenden Gruppen.
+     * @param int   $article_id        ID des zu versendenden Redaxo Artikels
+     * @param int   $fallback_clang_id ID der Sprache, die verwendet werden soll,
+     *                                 wenn der Artikel offline ist.
+     *
      * @return Array Array mit den Sprach IDs, die Offline sind und durch die
      * Fallback Sprache ersetzt wurden.
      */
@@ -385,8 +469,7 @@ class MultinewsletterNewsletterManager
             $Newsletter = MultinewsletterNewsletter::factory($article_id, $clang_id);
             if (!strlen($Newsletter->getValue('htmlbody'))) {
                 $offline_lang_ids[] = $clang_id;
-            }
-            else {
+            } else {
                 $Newsletter->setValue('attachments', $attachments);
                 $Newsletter->setValue('group_ids', $group_ids);
                 $Newsletter->setValue('sender_email', $_SESSION['multinewsletter']['newsletter']['sender_email']);
@@ -437,7 +520,9 @@ class MultinewsletterNewsletterManager
 
     /**
      * Veranlasst das Senden der nächsten Trange von Mails.
+     *
      * @param int $numberMails Anzahl von Mails die raus sollen.
+     *
      * @return boolean true, wenn erfolgreich versendet, sonst false
      */
     public function send($numberMails)

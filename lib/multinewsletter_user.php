@@ -59,7 +59,7 @@ class MultinewsletterUser extends MultinewsletterAbstract
      */
     public function activate()
     {
-        $this->data['activationkey']	= 0;
+        $this->data['activationkey']	= "0";
         $this->data['activationdate']	= date('Y-m-d H:i:s');
         $this->data['activationip']		= $_SERVER['REMOTE_ADDR'];
         $this->data['updatedate']		= date('Y-m-d H:i:s');
@@ -97,6 +97,14 @@ class MultinewsletterUser extends MultinewsletterAbstract
         $sql->setTable(rex::getTablePrefix() . '375_user');
         $sql->setWhere('id = :id', ['id' => $this->getId()]);
         return $sql->delete();
+    }
+
+	/**
+	 * Get name users name
+	 * @return string Name
+	 */
+    public function getName() {
+        return trim($this->getValue('firstname') . ' ' . $this->getValue('lastname'));
     }
 
     /**
@@ -264,10 +272,8 @@ class MultinewsletterUser extends MultinewsletterAbstract
 
     /**
      * Meldet den Benutzer vom Newsletter ab.
-     * @var action String mit auszuführender Aktion
      */
-    public function unsubscribe($action = "delete")
-    {
+    public function unsubscribe($action = "delete") {
         if ($action == "delete") {
             $this->delete();
         }
