@@ -34,6 +34,8 @@ rex_sql_table::get(rex::getTable('375_group'))->ensureColumn(new \rex_sql_column
 rex_sql_table::get(rex::getTable('375_user'))->ensureColumn(new \rex_sql_column('mailchimp_id', 'varchar(100)', true, null))->alter();
 rex_sql_table::get(rex::getTable('375_archive'))->ensureColumn(new \rex_sql_column('attachments', 'text', true, null))->alter();
 rex_sql_table::get(rex::getTable('375_archive'))->ensureColumn(new \rex_sql_column('article_id', 'int'))->alter();
+rex_sql_table::get(rex::getTable('375_archive'))->ensureColumn(new \rex_sql_column('group_ids', 'text'))->alter();
+rex_sql_table::get(rex::getTable('375_user'))->ensureColumn(new \rex_sql_column('group_ids', 'text'))->alter();
 
 // CHANGE primary keys to `id`
 if (rex_sql_table::get(rex::getTable('375_user'))->hasColumn('user_id')) {

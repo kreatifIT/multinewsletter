@@ -60,6 +60,9 @@ if (rex_sql_table::get(rex::getTable('375_archive'))->hasColumn('archive_id')) {
 	$sql->setQuery('ALTER TABLE ' . rex::getTablePrefix() . '375_group ENGINE = INNODB;');
 	$sql->setQuery('ALTER TABLE ' . rex::getTablePrefix() . '375_user ENGINE = INNODB;');
 }
+else if (rex_sql_table::get(rex::getTable('375_user'))->hasColumn('send_archive_id')) {
+    include __DIR__ .'/update.php';
+}
 else {
 	// Create
 	$sql->setQuery('CREATE TABLE IF NOT EXISTS `' . rex::getTablePrefix() . '375_archive` (
