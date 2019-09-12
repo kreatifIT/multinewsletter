@@ -1,5 +1,19 @@
 <fieldset>
 	<legend>MultiNewsletter Updatehinweise</legend>
+	<p>3.2.1:</p>
+	<ul>
+		<li>Achtung Entwickler: Die Klasse MultiNewsletterAbstract gibt es nicht
+			mehr. Die Klasse MultinewsletterUser unterstützt nun die Funktionen
+			getValue(), setValue() und getId() nicht mehr.</li>
+		<li>DSGVO Verbesserung: Es sollte unbedingt die AutoCleanUp Option in
+			den Einstellungen aktiviert werden. Diese Option löscht Abonnenten,
+			die ihre Anmeldung innerhalb von 4 Wochen nicht bestätigt haben und
+			ersetzt Empfänger Adressen nach 4 Wochen in den Archiven.</li>
+	</ul>
+	<p>3.2.0:</p>
+	<ul>
+		<li>Bitte Admin E-Mailadresse in den Einstellungen hinterlegen.</li>
+	</ul>
 	<p>3.0.0:</p>
 	<ul>
 		<li>Vor einem Update von Redaxo 4 auf Redaxo 5 müssen die MultiNewsletter

@@ -13,10 +13,10 @@ $lang_presets = [
 		'email' => 'E-Mail',
 		'select_newsletter' => 'Newsletter auswählen',
 		'compulsory' => 'Felder mit einem * müssen ausgefüllt werden.',
-		'privacy_policy' => 'Ich willige ein dass ich per E-Mail über Produkte und Produktaktionen dieser Webseite informiert werde. Über den Umfang der Datenverarbeitung habe ich mich <a href=\"+++LINK_PRIVACY_POLICY+++\">hier</a> informiert.
+		'privacy_policy' => "Ich willige ein dass ich per E-Mail über Produkte und Produktaktionen dieser Webseite informiert werde. Über den Umfang der Datenverarbeitung habe ich mich <a href='+++LINK_PRIVACY_POLICY+++'>hier</a> informiert.
 Meine Daten werden ausschließlich zu diesem Zweck genutzt.
 Eine Weitergabe der Daten an Dritte erfolgt nicht.
-Ich kann die Einwilligung jederzeit unter den im <a href=\"+++LINK_IMPRESS+++\">Impressum</a> angegebenen Kontaktdaten oder durch Nutzung des in den E-Mails enthaltenen Abmeldelinks widerrufen.',
+Ich kann die Einwilligung jederzeit unter den im <a href='+++LINK_IMPRESS+++'>Impressum</a> angegebenen Kontaktdaten oder durch Nutzung des in den E-Mails enthaltenen Abmeldelinks widerrufen.",
 		'subscribe' => 'Newsletter abonnieren',
 		'action' => 'Möchten Sie regelmäßig informiert werden? Dann abonnieren Sie unseren interessanten Newsletter:',
 		'safety' => 'Bei der Newsletterbestellung erhalten Sie aus rechtlichen Gründen eine E-Mail mit einem Bestätigungslink.',
@@ -31,16 +31,16 @@ Ich kann die Einwilligung jederzeit unter den im <a href=\"+++LINK_IMPRESS+++\">
 		'already_subscribed' => 'Sie sind bereits für unseren Newsletter eingetragen.',
 		'confirmation_sent' => 'Ihnen wurde soeben eine Bestätigungs-E-Mail geschickt. Ihre Anfrage wird erst fertiggestellt, wenn Sie den in der E-Mail enthaltenen Link geklickt haben.',
 		'confirmsubject' => 'Bitte bestätigen Sie Ihre Newsletter Anmeldung',
-		'confirmcontent' => '<p>Lieber Newsletter Abonnent,</p>
+		'confirmcontent' => "<p>Lieber Newsletter Abonnent,</p>
 <p>liebe Newsletter Abonnentin,</p><br>
-<p>bitte bestätigen Sie aus rechtlichen Gründen Ihre Anmeldung zum Newsletter. Klicken Sie dazu einfach auf den folgenden Link:  <a href=\"+++AKTIVIERUNGSLINK+++\">+++AKTIVIERUNGSLINK+++</a></p><br>
+<p>bitte bestätigen Sie aus rechtlichen Gründen Ihre Anmeldung zum Newsletter. Klicken Sie dazu einfach auf den folgenden Link:  <a href='+++AKTIVIERUNGSLINK+++'>+++AKTIVIERUNGSLINK+++</a></p><br>
 <p>TIPP: Damit unsere E-Mails nicht ungewollt in den Spam-Ordner verschoben oder gelöscht werden, nehmen Sie uns einfach in Ihr persönliches Adressbuch auf.</p>
 <p>Dazu klicken Sie je nach verwendetem E-Mail-Programm entweder</p>
 <ul><li>auf den entsprechenden Adressbuch-Link neben der Absenderadresse oder</li><li>mit der rechten Maustaste oben auf die Absenderadresse und wählen im daraufhin erscheinenden Pop-up-Menü den Punkt „Zum Adressbuch hinzufügen“.</li></ul>
 <p>So entgeht Ihnen garantiert keine Ausgabe unseres Newsletters!</p><br>
 <p>Falls Sie den Newsletter nicht erhalten wollen, brauchen Sie nichts zu tun.</p><br>
 <p>Vielen Dank,</p><br>
-<p>Ihr Newsletter Team</p>',
+<p>Ihr Newsletter Team</p>",
 		'already_confirmed' => 'Sie haben die letzte Aktion scheinbar schon bestätigt.',
 		'invalid_key' => 'Der übermittelte Sicherheitscode war ungültig. Haben Sie eventuell einen neuen Code erhalten?',
 		'confirmation_successful' => '<p>Vielen Dank für Ihre Bestätigung! Ihre E-Mail Adresse wurde angemeldet.</p>',
@@ -61,10 +61,10 @@ Ich kann die Einwilligung jederzeit unter den im <a href=\"+++LINK_IMPRESS+++\">
 		'lastname' => 'Last name',
 		'email' => 'E-Mail',
 		'select_newsletter' => 'Select newsletter',
-		'privacy_policy' => 'I agree that I will be informed by e-mail about products and product promotions of this website. I\'ve learned about the scope of data processing <a href=\"+++LINK_PRIVACY_POLICY+++\"> here </a>.
+		'privacy_policy' => "I agree that I will be informed by e-mail about products and product promotions of this website. I’ve learned about the scope of data processing <a href='+++LINK_PRIVACY_POLICY+++'> here </a>.
 My data is used exclusively for this purpose.
 A transfer of the data to third parties does not take place.
-I may withdraw your consent at any time from the contact information provided in the <a href=\"+++LINK_IMPRESS+++\"> imprint </a> or by using the unsubscribe link contained in the emails.',
+I may withdraw your consent at any time from the contact information provided in the <a href='+++LINK_IMPRESS+++'> imprint </a> or by using the unsubscribe link contained in the emails.",
 		'compulsory' => 'Fields marked * must be compulsorily filled.',
 		'subscribe' => 'Subscribe newsletter',
 		'action' => 'Do you want to be regularly informed? Then subscribe to our interesting newsletter:',
@@ -80,15 +80,15 @@ I may withdraw your consent at any time from the contact information provided in
 		'already_subscribed' => 'You already subscribed this newsletter.',
 		'confirmation_sent' => 'We sent a confirmation mail to the submitted e-mail address. Your request will be completed by clicking on the link in the mail.',
 		'confirmsubject' => 'Please confirm your registration',
-		'confirmcontent' => '<p>Dear +++TITLE+++ +++GRAD+++ +++FIRSTNAME+++ +++LASTNAME+++,</p><br>
-<p>for legal reasons – please confirm your newsletter registration by clicking on the following link: <a href=\"+++AKTIVIERUNGSLINK+++\">+++AKTIVIERUNGSLINK+++</a></p>
+		'confirmcontent' => "<p>Dear +++TITLE+++ +++GRAD+++ +++FIRSTNAME+++ +++LASTNAME+++,</p><br>
+<p>for legal reasons – please confirm your newsletter registration by clicking on the following link: <a href='+++AKTIVIERUNGSLINK+++'>+++AKTIVIERUNGSLINK+++</a></p>
 <p>HINT: Just to ensure that our E-mails are not inadvertently pushed to the spam folder or deleted, please simply add us in your personal address book.</p>
 <p>For this, click on either of the following, depending on the used E-Mail program:</p>
-<ul><li>on the corresponding address book link near the sender address or</li><li>right click the mouse over the sender address and on the displayed Pop-up menu, select the item "Add sender to address book".</li></ul>
+<ul><li>on the corresponding address book link near the sender address or</li><li>right click the mouse over the sender address and on the displayed Pop-up menu, select the item „Add sender to address book“.</li></ul>
 <p>This will ensure that you do not miss any edition of our Newsletters!</p>
 <p>If you don’t want to receive this Newsletter, you don’t need to do anything. You will need to click on the link to confirm that you wish to subscribe.</p><br>
 <p>Sincerely, yours</p><br>
-<p>Newsletter-Team</p>',
+<p>Newsletter-Team</p>",
 		'already_confirmed' => 'You already entered the last action.',
 		'invalid_key' => 'The submitted security code was invalid. Did you already receive a new code?',
 		'confirmation_successful' => 'Your confirmation was successful.',
@@ -109,10 +109,10 @@ I may withdraw your consent at any time from the contact information provided in
 		'lastname' => 'Cognome',
 		'email' => 'E-Mail',
 		'select_newsletter' => 'Scegli il newsletter',
-		'privacy_policy' => 'Accetto che sarò informato via e-mail sui prodotti e le promozioni dei prodotti di questo sito. Ho appreso lo scopo dell\'elaborazione dei dati <a href=\"+++LINK_PRIVACY_POLICY+++\">qui</a>.
+		'privacy_policy' => "Accetto che sarò informato via e-mail sui prodotti e le promozioni dei prodotti di questo sito. Ho appreso lo scopo dell’elaborazione dei dati <a href='+++LINK_PRIVACY_POLICY+++'>qui</a>.
 I miei dati sono usati esclusivamente per questo scopo.
 Un trasferimento dei dati a terzi non ha luogo.
-Posso ritirare il tuo consenso in qualsiasi momento dalle informazioni di contatto fornite nella <a href=\"+++LINK_IMPRESS+++\"> impronta </a> o utilizzando il link di cancellazione contenuto nelle email.',
+Posso ritirare il tuo consenso in qualsiasi momento dalle informazioni di contatto fornite nella <a href='+++LINK_IMPRESS+++'> impronta </a> o utilizzando il link di cancellazione contenuto nelle email.",
 		'compulsory' => 'I campi * sono obbligatori.',
 		'subscribe' => 'Abbonarsi',
 		'action' => 'Vuole rimanere informato? Si iscrivi subito al nostro newsletter:',
@@ -128,13 +128,13 @@ Posso ritirare il tuo consenso in qualsiasi momento dalle informazioni di contat
 		'already_subscribed' => 'È giá iscritto a questo newsletter.',
 		'confirmation_sent' => 'Le abbiamo inviato un email di conferma. Sua registrazione sarà completata quando clicca al Link nel email.',
 		'confirmsubject' => 'Confermare la registrazione',
-		'confirmcontent' => '<p>Caro +++TITLE+++ +++GRAD+++ +++FIRSTNAME+++ +++LASTNAME+++,</p><br>
-<p>per motivi legali, si prega di confermare il suo abbonamento al newsletter.<br/>Clicchi semplicemente al link seguente: <a href="+++AKTIVIERUNGSLINK+++">+++AKTIVIERUNGSLINK+++</a></p>
+		'confirmcontent' => "<p>Caro +++TITLE+++ +++GRAD+++ +++FIRSTNAME+++ +++LASTNAME+++,</p><br>
+<p>per motivi legali, si prega di confermare il suo abbonamento al newsletter.<br/>Clicchi semplicemente al link seguente: <a href='+++AKTIVIERUNGSLINK+++'>+++AKTIVIERUNGSLINK+++</a></p>
 <p>HINT: Just to ensure that our E-mails are not inadvertently pushed to the spam folder or deleted, please simply add us in your personal address book.</p>
 <p>Così non Si perda nessun newsletter!</p>
 <p>Se non vuole abbonarsi il newsletter, può ignorare questo email.</p><br>
 <p>Grazie.</p><br>
-<p>Newsletter-Team</p>',
+<p>Newsletter-Team</p>",
 		'already_confirmed' => 'Ha già confermato il Suo email..',
 		'invalid_key' => 'Il codice di sicurezza non è valido. Probabilmente ha già ricevuto uno nuovo?',
 		'confirmation_successful' => 'Sua registrazione è avvenuta con successo.',
@@ -160,6 +160,9 @@ if (filter_input(INPUT_POST, "btn_save") == "Speichern") {
 	$settings['default_test_article'] = $link_ids["REX_INPUT_LINK"][3];
 	$settings['default_test_article_name'] = trim($link_names["REX_LINK_NAME"][3]);
 
+	$settings['autocleanup'] = array_key_exists('autocleanup', $settings) ? "active" : "inactive";
+	$settings['autosend'] = array_key_exists('autosend', $settings) ? "active" : "inactive";
+
 	// import yform-manager tablesets
 	if ($settings['use_yform'] && rex_plugin::get('yform', 'manager')->isAvailable()) {
 	    if (!rex_yform_manager_table::get(rex::getTablePrefix() .'375_user')) {
@@ -171,6 +174,26 @@ if (filter_input(INPUT_POST, "btn_save") == "Speichern") {
 	// Save settings
 	if(rex_config::set("multinewsletter", $settings)) {
 		echo rex_view::success(rex_i18n::msg('multinewsletter_changes_saved'));
+		
+		// Install / remove Cronjobs
+		$cronjob_cleanup = multinewsletter_cronjob_cleanup::factory();
+		if($this->getConfig('autocleanup') == 'active') {
+			if(!$cronjob_cleanup->isInstalled()) {
+				$cronjob_cleanup->install();
+			}
+		}
+		else {
+			$cronjob_cleanup->delete();
+		}
+		$cronjob_sender = multinewsletter_cronjob_sender::factory();
+		if($this->getConfig('autosend') == 'active') {
+			if(!$cronjob_sender->isInstalled()) {
+				$cronjob_sender->install();
+			}
+		}
+		else {
+			$cronjob_sender->delete();
+		}
 	}
 	else {
 		echo rex_view::error(rex_i18n::msg('multinewsletter_changes_not_saved'));
@@ -199,7 +222,15 @@ foreach(rex_clang::getAll() as $rex_clang) {
 						d2u_addon_backend_helper::form_linkfield('multinewsletter_config_link', 1, $this->getConfig('link'), rex_config::get("d2u_helper", "default_lang", rex_clang::getStartId()));
 						d2u_addon_backend_helper::form_linkfield('multinewsletter_config_link_abmeldung', 2, $this->getConfig('link_abmeldung'), rex_config::get("d2u_helper", "default_lang", rex_clang::getStartId()));
 
+						d2u_addon_backend_helper::form_input('multinewsletter_config_admin_email', 'settings[admin_email]', $this->getConfig('admin_email'), TRUE, FALSE, 'email');
 						d2u_addon_backend_helper::form_input('multinewsletter_config_subscribe_meldung_email', 'settings[subscribe_meldung_email]', $this->getConfig('subscribe_meldung_email'), FALSE, FALSE, 'email');
+						if(rex_addon::get('cronjob')->isAvailable()) {
+							d2u_addon_backend_helper::form_checkbox('multinewsletter_config_autosend', 'settings[autosend]', 'active', $this->getConfig('autosend') == 'active' && multinewsletter_cronjob_sender::factory()->isInstalled());
+							d2u_addon_backend_helper::form_checkbox('multinewsletter_config_autocleanup', 'settings[autocleanup]', 'active', $this->getConfig('autocleanup') == 'active' && multinewsletter_cronjob_cleanup::factory()->isInstalled());
+						}
+						else {
+							d2u_addon_backend_helper::form_infotext('multinewsletter_config_install_cronjob', 'autosend_info');
+						}
 					?>
 					<br/>
 					<h4 style="border-bottom:1px solid #ccc;">Versandoptionen</h4>
@@ -207,12 +238,41 @@ foreach(rex_clang::getAll() as $rex_clang) {
 						d2u_addon_backend_helper::form_select('multinewsletter_config_use_smtp', 'settings[use_smtp]', [0 => rex_i18n::msg('multinewsletter_config_use_smtp_phpmailer'), 1 => rex_i18n::msg('yes')], [$this->getConfig('use_smtp', 0)]);
 						d2u_addon_backend_helper::form_input('phpmailer_bcc', 'settings[smtp_bcc]', $this->getConfig('smtp_bcc'));
 						d2u_addon_backend_helper::form_input('phpmailer_host', 'settings[smtp_host]', $this->getConfig('smtp_host'));
-						d2u_addon_backend_helper::form_input('phpmailer_port', 'settings[smtp_port]', $this->getConfig('smtp_port'));
+						d2u_addon_backend_helper::form_input('phpmailer_port', 'settings[smtp_port]', $this->getConfig('smtp_port'), FALSE, FALSE, 'number');
 						d2u_addon_backend_helper::form_select('phpmailer_smtp_secure', 'settings[smtp_crypt]', ['' => rex_i18n::msg('no'), 'ssl' => 'ssl', 'tls' => 'tls'], [$this->getConfig('smtp_crypt', [])]);
 						d2u_addon_backend_helper::form_select('phpmailer_smtp_auth', 'settings[smtp_auth]', [0 => rex_i18n::msg('no'), 1 => rex_i18n::msg('yes')], [$this->getConfig('smtp_auth', [])]);
 						d2u_addon_backend_helper::form_input('phpmailer_smtp_username', 'settings[smtp_user]', $this->getConfig('smtp_user'));
 						d2u_addon_backend_helper::form_input('phpmailer_smtp_password', 'settings[smtp_password]', $this->getConfig('smtp_password'));
 					?>
+					<script>
+						function changeType() {
+							if($('select[name="settings\\[use_smtp\\]"]').val() === "0") {
+								$('#settings\\[smtp_bcc\\]').hide();
+								$('#settings\\[smtp_host\\]').hide();
+								$('#settings\\[smtp_port\\]').hide();
+								$('#settings\\[smtp_crypt\\]').hide();
+								$('#settings\\[smtp_auth\\]').hide();
+								$('#settings\\[smtp_user\\]').hide();
+								$('#settings\\[smtp_password\\]').hide();
+							}
+							else {
+								$('#settings\\[smtp_bcc\\]').show();
+								$('#settings\\[smtp_host\\]').show();
+								$('#settings\\[smtp_port\\]').show();
+								$('#settings\\[smtp_crypt\\]').show();
+								$('#settings\\[smtp_auth\\]').show();
+								$('#settings\\[smtp_user\\]').show();
+								$('#settings\\[smtp_password\\]').show();
+							}
+						}
+
+						// On init
+						changeType();
+						// On change
+						$('select[name="settings\\[use_smtp\\]"]').on('change', function() {
+							changeType();
+						});
+					</script>
 					<br/>
 				</div>
 			</fieldset>
@@ -363,7 +423,7 @@ foreach(rex_clang::getAll() as $rex_clang) {
 	</div>
 </form>
 
-<style type="text/css">
+<style>
 	/* Slide fieldsets*/
 	div.panel-body legend {
 		background: transparent url("<?php echo $this->getAssetsUrl('arrows.png'); ?>") no-repeat 0px 7px;
@@ -408,7 +468,7 @@ foreach(rex_clang::getAll() as $rex_clang) {
 	}
 </style>
 
-<script type="text/javascript">
+<script>
 	function setVisibility(id) {
 		if(document.getElementById('dropdown-' + id).style.display === 'inherit'){
 			document.getElementById('dropdown-' + id).style.display = 'none';

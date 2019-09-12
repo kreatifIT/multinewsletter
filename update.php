@@ -1,16 +1,22 @@
 <?php
 // Update modules
-if(class_exists(D2UModuleManager)) {
+if(class_exists('D2UModuleManager')) {
 	$d2u_multinewsletter_modules = [];
 	$d2u_multinewsletter_modules[] = new D2UModule("80-1",
 		"MultiNewsletter Anmeldung mit Name und Anrede",
-		3);
+		5);
 	$d2u_multinewsletter_modules[] = new D2UModule("80-2",
 		"MultiNewsletter Abmeldung",
-		4);
+		6);
 	$d2u_multinewsletter_modules[] = new D2UModule("80-3",
 		"MultiNewsletter Anmeldung nur mit Mail",
-		3);
+		5);
+	$d2u_multinewsletter_modules[] = new D2UModule("80-4",
+		"MultiNewsletter YForm Anmeldung",
+		1);
+	$d2u_multinewsletter_modules[] = new D2UModule("80-5",
+		"MultiNewsletter YForm Abmeldung",
+		1);
 
 	$d2u_module_manager = new D2UModuleManager($d2u_multinewsletter_modules, "", "multinewsletter");
 	$d2u_module_manager->autoupdate();
@@ -87,13 +93,29 @@ $sql->setQuery("SHOW COLUMNS FROM ". \rex::getTablePrefix() ."375_user LIKE 'pri
 if($sql->getRows() == 0) {
 	$sql->setQuery("ALTER TABLE `". \rex::getTablePrefix() ."375_user` ADD `privacy_policy_accepted` TINYINT(1) NOT NULL DEFAULT 0 AFTER `activationkey`;");
 }
-// 3.1.7 Update database
+// 3.2.0 Update database
+// Enlarge Activation Key field
 $sql->setQuery("ALTER TABLE `" . rex::getTablePrefix() . "375_user` CHANGE `activationkey` `activationkey` VARCHAR(45) NULL DEFAULT NULL;");
-// 3.1.8 Update database
-$sql->setQuery("ALTER TABLE `" . rex::getTablePrefix() . "375_user` CHANGE `send_archive_id` `send_archive_id` INT(11) UNSIGNED NOT NULL AUTO_INCREMENT;");
+// Outsource send_archive_id in extra table
+$sql->setQuery("CREATE TABLE IF NOT EXISTS ". rex::getTablePrefix() ."375_sendlist (
+	`archive_id` int(11) unsigned NOT NULL,
+	`user_id` int(11) unsigned NOT NULL,
+	`autosend` tinyint(1) DEFAULT 0,
+	PRIMARY KEY (archive_id, user_id)
+) ENGINE=INNODB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci AUTO_INCREMENT=1;");
+$sql->setQuery("SHOW COLUMNS FROM ". \rex::getTablePrefix() ."375_user LIKE 'send_archive_id';");
+if($sql->getRows() > 0) {
+	$sql->setQuery("SELECT * FROM `" . rex::getTablePrefix() . "375_user` WHERE `send_archive_id` > 0;");
+	if($sql->getRows() > 0) {
+		$sql->setQuery("INSERT INTO `" . rex::getTablePrefix() . "375_sendlist` (`archive_id`, `user_id`) "
+			. "SELECT `send_archive_id`, `id` FROM `" . rex::getTablePrefix() . "375_user` WHERE `send_archive_id` > 0;");
+	}
+    $sql->setQuery('ALTER TABLE `' . rex::getTablePrefix() . '375_user` DROP `send_archive_id`;');
+}
+rex_sql_table::get(rex::getTable('375_archive'))->ensureColumn(new \rex_sql_column('recipients_failure', 'longtext', true, null))->alter();
 
 // Update modules
-if(class_exists(D2UModuleManager) && class_exists(D2UMultiNewsletterModules)) {
+if(class_exists('D2UModuleManager') && class_exists('D2UMultiNewsletterModules')) {
 	$d2u_module_manager = new D2UModuleManager(D2UMultiNewsletterModules::getD2UMultiNewsletterModules(), "modules/", "multinewsletter");
 	$d2u_module_manager->autoupdate();
 }
@@ -103,3 +125,11 @@ if($this->hasConfig('unsubscribe_action')) {
 	$this->removeConfig('unsubscribe_action');
 }
 $sql->setQuery('DELETE FROM ' . rex::getTablePrefix() . '375_user WHERE `status` = 2;');
+
+// 3.2.4
+$sql->setQuery("ALTER TABLE `". rex::getTablePrefix() ."375_group` CHANGE `name` `name` VARCHAR(191) NULL DEFAULT NULL;");
+$sql->setQuery("ALTER TABLE `". rex::getTablePrefix() ."375_user` CHANGE `email` `email` VARCHAR(191) NULL DEFAULT NULL;");
+$sql->setQuery("ALTER TABLE `". rex::getTablePrefix() ."375_archive` CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;");
+$sql->setQuery("ALTER TABLE `". rex::getTablePrefix() ."375_group` CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;");
+$sql->setQuery("ALTER TABLE `". rex::getTablePrefix() ."375_user` CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;");
+$sql->setQuery("ALTER TABLE `". rex::getTablePrefix() ."375_sendlist` CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;");

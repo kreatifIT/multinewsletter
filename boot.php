@@ -1,11 +1,10 @@
 <?php
-
-if (!rex::isBackend()) {
-    // Für die Webansicht
-    rex_extension::register('OUTPUT_FILTER', function (rex_extension_point $ep) {
-        $User = MultinewsletterUser::initByMail(rex_get('email', 'string'));
-        return MultinewsletterNewsletter::replaceVars($ep->getSubject(), rex_article::getCurrent(), $User);
-    });
+if (!rex::isBackend() && rex_get('replace_vars', 'boolean', true)) {
+    // Web frontend
+	rex_extension::register('OUTPUT_FILTER', function (rex_extension_point $ep) {
+		$multinewsletter_user = rex_get('email', 'string') == "" ? new MultinewsletterUser(0) : MultinewsletterUser::initByMail(rex_get('email', 'string'));
+		return MultinewsletterNewsletter::replaceVars($ep->getSubject(), $multinewsletter_user, rex_article::getCurrent());
+	});
 }
 else if (rex::isBackend() && rex::getUser()) {
 
@@ -72,12 +71,12 @@ else if (rex::isBackend() && rex::getUser()) {
             $action = $ep->getParam('action');
 
             if ($ep->getParam('table') == rex::getTablePrefix() . '375_user') {
-                $User = new MultinewsletterUser($ep->getParam('id'));
+                $user = new MultinewsletterUser($ep->getParam('id'));
 
                 if ($action != 'update') {
-                    $User->setValue('subscriptiontype', 'backend');
+                    $user->subscriptiontype = 'backend';
                 }
-                $User->save();
+                $user->save();
             }
         }
         return $sql;

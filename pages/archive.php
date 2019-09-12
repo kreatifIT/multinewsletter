@@ -31,18 +31,49 @@ if ($func == 'edit') {
 	else if (strpos($result_archive->getValue("recipients"), ',') !== FALSE) {
 		$recipients = preg_grep('/^\s*$/s', explode(",", $result_archive->getValue("recipients")), PREG_GREP_INVERT);
 	}
+	else {
+		$recipients[] = $result_archive->getValue("recipients");
+	}
     $recipients_html = '<div style="font-size: 0.75em; width: 100%; max-height: 400px; overflow:auto; background-color: white; padding:8px;"><table width="100%"><tr>';
     foreach ($recipients as $key => $recipient) {
-        $recipients_html .= "<td width='33%'>" . strtolower($recipient) . "</td>";
+        $recipients_html .= "<td width='33%'>" . $recipient . "</td>";
         if ($key > 1 && $key % 3 == 2) {
             $recipients_html .= "</tr><tr>";
         }
     }
     $recipients_html .= "</tr></table></div>";
-    $form->addRawField(raw_field(rex_i18n::msg('multinewsletter_archive_recipients_count'), count($recipients)));
+	if(count($recipients) > 0 && strpos($recipients[0], 'Addresses deleted') === FALSE) {
+	    $form->addRawField(raw_field(rex_i18n::msg('multinewsletter_archive_recipients_count'), count($recipients)));
+	}
     $form->addRawField(raw_field(rex_i18n::msg('multinewsletter_archive_recipients'), $recipients_html));
 
-    // E-Mailadresse Absender
+    // Recipients with send failures
+    $recipients_failure = [];
+	if (strpos($result_archive->getValue("recipients_failure"), '|') !== FALSE) {
+		$recipients_failure = preg_grep('/^\s*$/s', explode("|", $result_archive->getValue("recipients_failure")), PREG_GREP_INVERT);
+	}
+	else if (strpos($result_archive->getValue("recipients"), ',') !== FALSE) {
+		$recipients_failure = preg_grep('/^\s*$/s', explode(",", $result_archive->getValue("recipients_failure")), PREG_GREP_INVERT);
+	}
+	else {
+		$recipients_failure[] = $result_archive->getValue("recipients_failure");
+	}
+    $recipients_failure_html = '<div style="font-size: 0.75em; width: 100%; max-height: 400px; overflow:auto; background-color: white; padding:8px;"><table width="100%"><tr>';
+    foreach ($recipients_failure as $key_failure => $recipient_failure) {
+        $recipients_failure_html .= "<td width='33%'>" . $recipient_failure . "</td>";
+        if ($key_failure > 1 && $key_failure % 3 == 2) {
+            $recipients_failure_html .= "</tr><tr>";
+        }
+    }
+    $recipients_failure_html .= "</tr></table></div>";
+	if(count($recipients) > 0 && strpos($recipients_failure[0], 'Addresses deleted') === FALSE) {
+		$form->addRawField(raw_field(rex_i18n::msg('multinewsletter_archive_recipients_failure_count'), count($recipients_failure)));
+	}
+	if(count($recipients_failure) > 0) {
+		$form->addRawField(raw_field(rex_i18n::msg('multinewsletter_archive_recipients_failure'), $recipients_failure_html));
+	}
+
+	// E-Mailadresse Absender
     $form->addRawField(raw_field(rex_i18n::msg('multinewsletter_group_default_sender_email'), $result_archive->getValue("sender_email")));
 
     // Empfänger Gruppen
@@ -66,7 +97,7 @@ if ($func == 'edit') {
 
     $form->show();
 
-    print '<br><style type="text/css">' . '#rex-375-archive-archiv-save, #rex-375-archive-archiv-apply {visibility:hidden}' . '</style>';
+    print '<br><style>' . '#rex-375-archive-archiv-save, #rex-375-archive-archiv-apply {visibility:hidden}' . '</style>';
 }
 // Newsletter anzeigen
 else if ($func == 'shownewsletter') {
@@ -81,11 +112,11 @@ else if ($func == 'shownewsletter') {
     print base64_decode($result_archive->getValue("htmlbody"));
     exit;
 }
-// Eintrag löschen
+// Delete entry and in case also remaining sendlist users
 else if ($func == 'delete') {
-    $query  = "DELETE FROM " . rex::getTablePrefix() . "375_archive " . "WHERE id = " . $entry_id;
     $result = rex_sql::factory();
-    $result->setQuery($query);
+    $result->setQuery("DELETE FROM " . rex::getTablePrefix() . "375_archive WHERE id = " . $entry_id);
+    $result->setQuery("DELETE FROM " . rex::getTablePrefix() . "375_sendlist WHERE archive_id = " . $entry_id);
 
     echo rex_view::success(rex_i18n::msg('multinewsletter_archive_deleted'));
     $func = '';

@@ -1,7 +1,55 @@
 <fieldset>
 	<legend>MultiNewsletter Changelog</legend>
-	<p>3.1.7-DEV</p>
+
+	<p>3.2.6-DEV</p>
 	<ul>
+		<li>Ersetzungsvariablen +++LINK_PRIVACY_POLICY+++ und +++LINK_IMPRESS+++ wurden immer nur mit dem Link der Standardsprache ersetzt.</li>
+		<li>Artikel wird nun per HTTP Socket gelesen um Addons wie Blöcks, XOutputFilter und SProg nutzbar zu machen. Sollte ein Socket Aufbau fehlschlagen wird der Inhalt des Artikels wie bisher ausgelesen.</li>
+	</ul>
+	<p>3.2.5</p>
+	<ul>
+		<li>Bugfix: wenn Titel des Newsletters ein ' enthielt gab es einen fatal error.</li>
+		<li>Bugfix: Installation schlug wegen utf8mb4 Konvertierung fehl.</li>
+	</ul>
+	<p>3.2.4</p>
+	<ul>
+		<li>Bugfix Versand: Fatal Error behoben wenn keine Empfänger ausgewählt waren.</li>
+		<li>Bugfix Import: war ein Leerzeichen beim Import vor oder nach einer E-Mailadresse eingefügt, wurde bei einem doppelten Eintrag ein fatal error angezeigt.</li>
+		<li>Verbesserte Übersetzungen ausstehender Newsletter.</li>
+		<li>YRewrite Multidomain support.</li>
+		<li>Datenbanktabellen zu utf8mb4 konvertiert.</li>
+	</ul>
+	<p>3.2.3</p>
+	<ul>
+		<li>YForm Beispielmodule hinzugefügt.</li>
+		<li>Bei Deinstallation wurde eine Tabelle nicht gelöscht.</li>
+		<li>Bugfix Standardtexte.</li>
+		<li>Module für Anmeldung 80-1 und 80-3: PHP 7.2 Warning entfernt und Bugfix Speichern Anmeldedatum.</li>
+	</ul>
+	<p>3.2.2</p>
+	<ul>
+		<li>Bugfix Issue #29.</li>
+		<li>Bugfix: Deaktiviertes Addon zu deinstallieren führte zu fatal error (#30).</li>
+		<li>Bugfix: Leerer Titel führt zu Fehler beim Speichern (#31).</li>
+		<li>Bugfix: CronJob wird - wenn installiert - nicht immer richtig aktiviert.</li>
+	</ul>
+	<p>3.2.1</p>
+	<ul>
+		<li>Bugfix Issue #28.</li>
+		<li>Achtung Entwickler: Die Klasse MultiNewsletterAbstract gibt es nicht mehr. Die Klasse MultinewsletterUser unterstützt nun die Funktionen getValue(), setValue() und getId() nicht mehr.</li>
+		<li>Kleine Verbesserungen am Template: Einstellungen aus dem D2U Helper Addon werden übernommen.</li>
+		<li>DSGVO Anpassung: CronJob zum automatischen Entfernen der Adressen von Empfängern in mehr als 4 Wochen alten Newslettern hinzugefügt. Außerdem werden Abonnenten gelöscht, die ihre Anmeldung innerhalb von 4 Wochen nicht aktiviert haben.</li>
+		<li>Klasse MultiNewsletterGroupList in Klasse MultiNewsletterGroup integriert.</li>
+		<li>Versandoptionen in den Einstellungen werden nur noch eingeblendet wenn ja ausgewählt ist.</li>
+		<li>Benachrichtigung bei Autoversand verbessert.</li>
+	</ul>
+	<p>3.2.0</p>
+	<ul>
+		<li>Modul 80-2 Abmeldung Parameter zur Abmeldung umbenannt, damit auf einer Seite das An- und Abmeldemodul verwendet werden kann.</li>
+		<li>Newsletter kann über Backend per CronJob versendet werden.</li>
+		<li>Methode zum automatischen Versand per API steht zur Verfügung: <pre>MultinewsletterNewsletterManager::autosend()</pre></li>
+		<li>Administrator E-Mailadresse in den Einstellungen hinzugefügt.</li>
+		<li>Ausstehende Empfänger werden nun in eigener Tabelle gespeichert.</li>
 		<li>Bugfix: Methode getName() in NewsletterGroup lieferte leeren Wert.</li>
 		<li>DSGVO Hinweis im Backend wenn MailChimp genutzt wird.</li>
 		<li>Activationkey von int auf varchar(45) geändert.</li>
@@ -9,7 +57,7 @@
 		<li>Daten bezüglich 1&1 aktualisiert.</li>
 		<li>Fehlermeldungen beim Versand verbessert.</li>
 		<li>Bugfix: bei der Webansicht von manchen Providern wie GMX wurden Links nicht verlinkt wenn es sich nicht um Links mit der kompletten URL handelt. Ab sofort wird immer die komplette URL ergänzt, falls sie fehlt.</li>
-		<li>Bugfix: Image Manager URLS beinhalten ein &. Dieses & wurde bisher kodiert und manche Mailprogramme konnten die Bilder dann nicht mehr laden. Jetzt werden alle & vor dem Versand zur Sicherheit decodiert.</li>
+		<li>Bugfix: Image Manager URLS beinhalten ein "&". Dieses "&" wurde bisher kodiert und manche Mailprogramme konnten die Bilder dann nicht mehr laden. Jetzt werden alle "&" vor dem Versand zur Sicherheit decodiert.</li>
 	</ul>
 	<p>3.1.6</p>
 	<ul>
