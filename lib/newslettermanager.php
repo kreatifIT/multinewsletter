@@ -303,6 +303,15 @@ class MultinewsletterNewsletterManager {
         }
         foreach ($this->archives as $archive_id => $newsletter) {
             $newsletter_lang_id = $newsletter->clang_id;
+            $sent_recipients = [];
+
+            $rows = $result->getArray("SELECT DISTINCT(recipients) AS recipients FROM `" . rex::getTablePrefix() . "375_archive` WHERE article_id = {$newsletter->article_id} AND clang_id = {$newsletter_lang_id}");
+
+            foreach ($rows as $row) {
+                $delimiter = strpos($row['recipients'], '|') === false ? ',' : '|';
+                $sent_recipients = array_merge($sent_recipients, explode($delimiter, $row['recipients']));
+            }
+            $sent_recipients = array_filter(array_unique($sent_recipients));
 
             if (!in_array($newsletter_lang_id, $offline_lang_ids)) {
                 $query_add_users = "INSERT INTO `" . rex::getTablePrefix() . "375_sendlist` (`archive_id`, `user_id`, `autosend`) "
@@ -312,6 +321,9 @@ class MultinewsletterNewsletterManager {
                     $query_add_users .= " OR " . implode(" OR ", $where_offline_langs);
                 }
                 $query_add_users  .= ") AND status = 1 AND email != ''";
+                if (count($sent_recipients)) {
+                    $query_add_users  .= " AND email NOT IN('". implode("', '", $sent_recipients) ."')";
+                }
                 $result_add_users = rex_sql::factory();
                 $result_add_users->setQuery($query_add_users);
             }
