@@ -176,10 +176,7 @@ else if(strlen($_SESSION['multinewsletter']['newsletter']['attachments']) == 0 &
 }
 
 // Für den Versand ausgewählte Empfänger
-$recipients = array_filter(rex_post('recipients', 'array', []));
-if(count($recipients)) {
-	$_SESSION['multinewsletter']['newsletter']['man_recipients'] = $recipients;
-}
+$_SESSION['multinewsletter']['newsletter']['man_recipients'] = array_filter(rex_post('recipients', 'array', []));
 
 // Die Gruppen laden
 $newsletter_groups = MultinewsletterGroup::getAll();
