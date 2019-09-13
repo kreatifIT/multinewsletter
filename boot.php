@@ -67,7 +67,7 @@ else if (rex::isBackend() && rex::getUser()) {
     rex_extension::register('REX_YFORM_SAVED', function ($ep) {
         $sql = $ep->getSubject();
 
-        if (!($sql instanceof Exception)) {
+        if (!($sql instanceof Exception) && MultinewsletterMailchimp::isActive()) {
             $action = $ep->getParam('action');
 
             if ($ep->getParam('table') == rex::getTablePrefix() . '375_user') {
