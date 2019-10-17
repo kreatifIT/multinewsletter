@@ -162,7 +162,7 @@ class MultinewsletterUser {
      * Activate user
      */
     public function activate() {
-        $this->activationkey = "0";
+        $this->activationkey = '';
         $this->activationdate = date('Y-m-d H:i:s');
         $this->activationip = $_SERVER['REMOTE_ADDR'];
         $this->updatedate = date('Y-m-d H:i:s');
@@ -261,13 +261,21 @@ class MultinewsletterUser {
         $content = str_replace("+++TITLE+++", htmlspecialchars(stripslashes($addon->getConfig('lang_' . $this->clang_id . "_title_" . $this->title)), ENT_QUOTES), $content);
         $content = preg_replace('/ {2,}/', ' ', $content);
 
-        $subscribe_link = (\rex_addon::get('yrewrite')->isAvailable() ? \rex_yrewrite::getCurrentDomain()->getUrl() : \rex::getServer()) 
+        $subscribe_link = (\rex_addon::get('yrewrite')->isAvailable() ? \rex_yrewrite::getCurrentDomain()->getUrl() : \rex::getServer())
 			. trim(trim(rex_getUrl($addon->getConfig('link'), $this->clang_id, ['activationkey' => $this->activationkey, 'email' => rawurldecode($this->email)], '&'), "/"), "./");
         if (rex_addon::get('yrewrite')->isAvailable()) {
             // Use Yrewrite, support for Redaxo installations in subfolders: https://github.com/TobiasKrais/multinewsletter/issues/7
             $subscribe_link = \rex_yrewrite::getFullUrlByArticleId($addon->getConfig('link'), $this->clang_id, ['activationkey' => $this->activationkey, 'email' => rawurldecode($this->email)], '&');
         }
         return str_replace("+++AKTIVIERUNGSLINK+++", $subscribe_link, $content);
+    }
+
+    public function setValue($key, $value) {
+        $this->{$key} = $value;
+    }
+
+    public function getValue($key) {
+        return $this->{$key};
     }
 
     /**
@@ -277,26 +285,32 @@ class MultinewsletterUser {
 	public function save() {
 		$error = TRUE;
 
-		$query = \rex::getTablePrefix() ."375_user SET "
-					."id = ". $this->id .", "
-					."email = '". trim($this->email) ."', "
-					."grad = '". $this->grad ."', "
-					."firstname = '". $this->firstname ."', "
-					."lastname = '". $this->lastname ."', "
-					."title = ". ($this->title == "" ? 0 : $this->title) .", "
-					."clang_id = ". $this->clang_id .", "
-					."status = ". $this->status .", "
-					."group_ids = '|". implode("|", (array) $this->group_ids) ."|', "
-					."mailchimp_id = '". $this->mailchimp_id ."', "
-					."createdate = '". ($this->createdate == "" ? date('Y-m-d H:i:s') : $this->createdate) ."', "
-					."createip = '". ($this->createip == "" ? $_SERVER['REMOTE_ADDR'] : $this->createip) ."', "
-					."activationdate = '". $this->activationdate ."', "
-					."activationip = '". $this->activationip ."', "
-					."activationkey = '". $this->activationkey ."', "
-					."updatedate = '". date('Y-m-d H:i:s') ."', "
-					."updateip = '". $_SERVER['REMOTE_ADDR'] ."', "
-					."subscriptiontype = '". $this->subscriptiontype ."', "
-					."privacy_policy_accepted = ". $this->privacy_policy_accepted ." ";
+		$properties = [];
+
+		if ($this->createdate == '') {
+            $this->createdate = date('Y-m-d H:i:s');
+        }
+		if ($this->createip == '') {
+            $this->createip = $_SERVER['REMOTE_ADDR'];
+        }
+        $this->updatedate = date('Y-m-d H:i:s');
+        $this->updateip = $_SERVER['REMOTE_ADDR'];
+
+		foreach (get_object_vars($this) as $key => $value) {
+
+            if ($key == 'group_ids') {
+                $value = "'|". implode('|', $value) ."|'";
+            } elseif (is_array($value)) {
+                $value = implode(',', $value);
+            } elseif (is_numeric($value)) {
+                $value = $value;
+            } else {
+                $value = "'". trim($value) ."'";
+            }
+            $properties[] = "{$key} = {$value}";
+        }
+        $query = \rex::getTablePrefix() ."375_user SET ". implode(', ', $properties);
+
 		if($this->id == 0) {
 			$query = "INSERT INTO ". $query;
 		}
@@ -309,7 +323,7 @@ class MultinewsletterUser {
 			$this->id = $result->getLastId();
 			$error = !$result->hasError();
 		}
-		
+
 		// Don't forget Mailchimp
         if (MultinewsletterMailchimp::isActive()) {
             $Mailchimp = MultinewsletterMailchimp::factory();
