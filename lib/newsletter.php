@@ -239,7 +239,11 @@ class MultinewsletterNewsletter {
 						'+++NEWSLETTERLINK+++'		=> $article ? self::getUrl($article->getId(), $clang_id) : '',
 						'+++LINK_PRIVACY_POLICY+++'	=> rex_getUrl(rex_config::get('d2u_helper', 'article_id_privacy_policy', rex_article::getSiteStartArticleId()), $clang_id),
 						'+++LINK_IMPRESS+++'		=> rex_getUrl(rex_config::get('d2u_helper', 'article_id_impress', rex_article::getSiteStartArticleId()), $clang_id),
-					])
+					]), [
+					    'user' => $user,
+					    'clang_id' => $clang_id,
+					    'article' => $article,
+                    ]
 				)
 			)
 		);
@@ -272,8 +276,8 @@ class MultinewsletterNewsletter {
      * @param int $clang_id Redaxo clang id
      */
     private function readArticle($article_id, $clang_id) {
-        $article = rex_article::get($article_id, $clang_id);
-        $article_content = new rex_article_content($article_id, $clang_id);
+        $article = rex_extension::registerPoint(new rex_extension_point('multinewsletter.readArticle', rex_article::get($article_id, $clang_id), ['article_id' => $article_id, 'clang_id' => $clang_id]));
+        $article_content = rex_extension::registerPoint(new rex_extension_point('multinewsletter.readArticleContent', new rex_article_content($article_id, $clang_id), ['article_id' => $article_id, 'clang_id' => $clang_id]));
 
         if ($article instanceof rex_article && $article->isOnline()) {
             $this->article_id = $article_id;
@@ -349,7 +353,7 @@ class MultinewsletterNewsletter {
      * @param rex_article $article Redaxo article
      * @return boolean TRUE if successful, otherwise FALSE
      */
-    private function send($multinewsletter_user, $article = null) {
+    public function send($multinewsletter_user, $article = null) {
         if (strlen($this->htmlbody) && strlen($multinewsletter_user->email)) {
             $addon_multinewsletter = rex_addon::get("multinewsletter");
 

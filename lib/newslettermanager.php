@@ -143,6 +143,9 @@ class MultinewsletterNewsletterManager {
 				}
 				$body .= "<br><br>Details finden Sie in den Archiven des MultiNewsletters und im CronJob Log.";
 				$newsletterManager->sendAdminNotification($subject, $body);
+
+                \rex_extension::registerPoint(new rex_extension_point('multinewsletter.scheduled_submit_done', $archive));
+
 				// Unset archive
 				unset($newsletterManager->archives[$archive->id]);
 			}
