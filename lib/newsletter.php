@@ -282,6 +282,8 @@ class MultinewsletterNewsletter {
         if ($article instanceof rex_article && $article->isOnline()) {
             $this->article_id = $article_id;
             $this->clang_id = $clang_id;
+
+            /* kreatif: doesnt needed for us
 			$article_url = rtrim(rex::getServer(), "/") . '/' . ltrim(str_replace(array('../', './'), '', rex_getUrl($article_id, $clang_id, ['replace_vars' => 0])),"/");
 			if(rex_addon::get("yrewrite") && rex_addon::get("yrewrite")->isAvailable()) {
 				$article_url = rex_yrewrite::getFullUrlByArticleId($article_id, $clang_id, ['replace_vars' => 0]);
@@ -296,6 +298,7 @@ class MultinewsletterNewsletter {
 				$this->htmlbody = $article_socket_response->getBody();
 			}
 			else {
+            */
 				// Fallback: read article using Redaxo internal method
 				if(function_exists('sprogdown')) {
 					$this->htmlbody = sprogdown($article_content->getArticleTemplate());
@@ -303,9 +306,11 @@ class MultinewsletterNewsletter {
 				else {
 					$this->htmlbody = $article_content->getArticleTemplate();
 				}
+            /* kreatif: doesnt needed for us
 			}
-			
-			$this->attachments = explode(",", $article->getValue('art_newsletter_attachments'));
+            */
+            
+            $this->attachments = explode(",", $article->getValue('art_newsletter_attachments'));
             $this->subject = $article->getValue('name');
         }
     }
