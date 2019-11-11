@@ -236,7 +236,7 @@ class MultinewsletterNewsletter {
 						'+++TITLE+++'				=> $addon->getConfig('lang_' . $clang_id . "_title_" . $user->title),
 						'+++ABMELDELINK+++'			=> self::getUrl($addon->getConfig('link_abmeldung'), $clang_id, ['unsubscribe' => $user->email]),
 						'+++AKTIVIERUNGSLINK+++'	=> self::getUrl($addon->getConfig('link'), $clang_id, ['activationkey' => $user->activationkey, 'email' => $user->email]),
-						'+++NEWSLETTERLINK+++'		=> $article ? self::getUrl($article->getId(), $clang_id) : '',
+						'+++NEWSLETTERLINK+++'		=> $article ? $article->getUrl([], $clang_id) : '',
 						'+++LINK_PRIVACY_POLICY+++'	=> rex_getUrl(rex_config::get('d2u_helper', 'article_id_privacy_policy', rex_article::getSiteStartArticleId()), $clang_id),
 						'+++LINK_IMPRESS+++'		=> rex_getUrl(rex_config::get('d2u_helper', 'article_id_impress', rex_article::getSiteStartArticleId()), $clang_id),
 					]), [
