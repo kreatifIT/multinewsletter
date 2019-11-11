@@ -375,7 +375,9 @@ class MultinewsletterNewsletterManager {
 			$archive_id = $recipient->getSendlistArchiveIDs($this->autosend_only);
             $newsletter = $this->archives[$archive_id[0]];
 
-            if ($newsletter->sendNewsletter($recipient, rex_article::get($newsletter->article_id)) == FALSE) {
+            $article = rex_extension::registerPoint(new rex_extension_point('multinewsletter.getSendArticle', rex_article::get($newsletter->article_id, $recipient->getValue('clang_id')), ['article_id' => $newsletter->article_id, 'clang_id' => $recipient->getValue('clang_id')]));
+
+            if ($newsletter->sendNewsletter($recipient, $article) == FALSE) {
 				$result->setQuery("DELETE FROM ". rex::getTablePrefix() ."375_sendlist WHERE user_id = ". $recipient->id ." AND archive_id = ". $newsletter->id);
                 $failure_mails[] = $recipient->email;
             }
