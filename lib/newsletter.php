@@ -321,35 +321,32 @@ class MultinewsletterNewsletter {
 	 */
 	public function save() {
 		$error = TRUE;
+		$sql = rex_sql::factory();
 
-		$query = \rex::getTablePrefix() ."375_archive SET "
-					."article_id = ". $this->article_id .", "
-					."clang_id = ". $this->clang_id .", "
-					."subject = '". addslashes(htmlspecialchars($this->subject)) ."', "
-					."htmlbody = '". base64_encode($this->htmlbody) ."', "
-					."attachments = '". implode(",", array_filter($this->attachments)) ."', "
-					."recipients = '". implode(",", $this->recipients) ."', "
-					."recipients_failure = '". implode(",", $this->recipients_failure) ."', "
-					."group_ids = '|". implode("|", $this->group_ids) ."|', "
-					."sender_email = '". trim($this->sender_email) ."', "
-					."sender_name = '". trim($this->sender_name) ."', "
-					."setupdate = '". ($this->setupdate == "" ? date('Y-m-d H:i:s') : $this->setupdate) ."', "
-					."sentdate = '". $this->sentdate ."', "
-					."sentby = '". $this->sentby ."' ";
+        $sql->setTable(\rex::getTablePrefix() . '375_archive');
+        $sql->setValue('article_id', $this->article_id);
+        $sql->setValue('clang_id', $this->clang_id);
+        $sql->setValue('subject', addslashes(htmlspecialchars($this->subject)));
+        $sql->setValue('htmlbody', base64_encode($this->htmlbody));
+        $sql->setValue('attachments', implode(",", array_filter($this->attachments)));
+        $sql->setValue('recipients', implode(",", $this->recipients));
+        $sql->setValue('recipients_failure', implode(",", $this->recipients_failure));
+        $sql->setValue('group_ids', '|'. implode("|", $this->group_ids) .'|');
+        $sql->setValue('sender_email', trim($this->sender_email));
+        $sql->setValue('sender_name', trim($this->sender_name));
+        $sql->setValue('setupdate', $this->setupdate == "" ? date('Y-m-d H:i:s') : $this->setupdate);
+        $sql->setValue('sentdate', $this->sentdate);
+        $sql->setValue('sentby', $this->sentby);
+
 		if($this->id == 0) {
-			$query = "INSERT INTO ". $query;
+		    $sql->insert();
+			$this->id = $sql->getLastId();
 		}
 		else {
-			$query = "UPDATE ". $query ." WHERE id = ". $this->id;
+		    $sql->setWhere('id = :id', [':id' => $this->id]);
+		    $sql->update();
 		}
-		$result = \rex_sql::factory();
-		$result->setQuery($query);
-		if($this->id == 0) {
-			$this->id = $result->getLastId();
-			$error = !$result->hasError();
-		}
-
-		return $error;
+		return !$sql->hasError();
     }
 
     /**
