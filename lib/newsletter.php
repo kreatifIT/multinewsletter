@@ -395,7 +395,10 @@ class MultinewsletterNewsletter {
             }
 
             $mail->Subject = self::personalize($this->subject, $multinewsletter_user, $article);
-			$body = self::personalize($this->htmlbody, $multinewsletter_user, $article);
+            $body = rex_extension::registerPoint(new rex_extension_point('multinewsletterNewsletter.preSend', self::personalize($this->htmlbody, $multinewsletter_user, $article), [
+                'mail' => $mail,
+                'user' => $multinewsletter_user,
+            ]));
             $mail->Body = self::replaceURLs($body);
             $success = $mail->send();
 			if(!$success) {
