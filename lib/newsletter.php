@@ -400,10 +400,18 @@ class MultinewsletterNewsletter {
                 'user' => $multinewsletter_user,
             ]));
             $mail->Body = self::replaceURLs($body);
-            $success = $mail->send();
-			if(!$success) {
-				print rex_view::error(rex_i18n::msg('multinewsletter_archive_recipients_failure') .": ". $multinewsletter_user->email ." - ". $mail->ErrorInfo);
-			}
+
+            $doSend = rex_extension::registerPoint(new rex_extension_point('multinewsletterNewsletter.doSend', true, [
+                'mail' => $mail,
+                'user' => $multinewsletter_user,
+            ]));
+
+            if ($doSend) {
+                $success = $mail->send();
+                if(!$success) {
+                    print rex_view::error(rex_i18n::msg('multinewsletter_archive_recipients_failure') .": ". $multinewsletter_user->email ." - ". $mail->ErrorInfo);
+                }
+            }
 			return $success;
         }
         else {
