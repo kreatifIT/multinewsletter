@@ -235,7 +235,7 @@ class MultinewsletterUser {
      * @return MultinewsletterUser|boolean Initialized MultinewsletterUser object.
      */
     public static function initByMail($email) {
- 		$query = "SELECT * FROM ". \rex::getTablePrefix() ."375_user WHERE email = '". trim($email) ."'";
+ 		$query = "SELECT * FROM ". \rex::getTablePrefix() ."375_user WHERE email LIKE '". trim($email) ."'";
 		$result = \rex_sql::factory();
 		$result->setQuery($query);
 
