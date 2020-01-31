@@ -113,7 +113,7 @@ class MultinewsletterNewsletterManager {
 						. "Der Versand per ConJob war nicht möglich und wurde daher ohne Berücksichtigung möglicher Serverlimits auf ein mal durchgeführt. Bitte installieren Sie das CronJob Addon und aktivieren Sie außerdem den MutliNewsletter Sender Cronjob über die Einstellungen des MultiNewsletters.<br><br>"
 						. "Fehler gab es beim Versand an folgende Nutzer:<br>"
 						. implode(", ", $archive->recipients_failure);
-					$newsletterManager->sendAdminNotification($subject, $body);
+					$newsletterManager->sendAdminNotification($subject, $body, $archive->clang_id);
 					// Unset archive
 					unset($this->archives[$archive->id]);
 				}
@@ -142,7 +142,7 @@ class MultinewsletterNewsletterManager {
 						. implode('<br>- ', $archive->recipients_failure);
 				}
 				$body .= "<br><br>Details finden Sie in den Archiven des MultiNewsletters und im CronJob Log.";
-				$newsletterManager->sendAdminNotification($subject, $body);
+				$newsletterManager->sendAdminNotification($subject, $body, $archive->clang_id);
 
                 \rex_extension::registerPoint(new rex_extension_point('multinewsletter.scheduled_submit_done', $archive));
 
@@ -404,16 +404,17 @@ class MultinewsletterNewsletterManager {
      * @param string $body Message body
      * @return boolean TRUE if successfully sent, otherwise FALSE
      */
-    private function sendAdminNotification($subject, $body) {
+    private function sendAdminNotification($subject, $body, $clangId) {
 		$multinewsletter = rex_addon::get('multinewsletter');
 		if($multinewsletter->getConfig('admin_email', '') != '') {
 			$multinewsletter = rex_addon::get("multinewsletter");
+			$clang = rex_clang::get($clangId);
 
 			$mail = new rex_mailer();
 			$mail->IsHTML(true);
 			$mail->CharSet = "utf-8";
 			$mail->From = $multinewsletter->getConfig('sender');
-			$mail->FromName = "MultiNewsletter Manager";
+			$mail->FromName = $multinewsletter->getConfig('lang_'. $clangId .'_sendername');
 			$mail->Sender = $multinewsletter->getConfig('sender');
 			$mail->AddAddress($multinewsletter->getConfig('admin_email'));
 
@@ -427,7 +428,7 @@ class MultinewsletterNewsletterManager {
 				$mail->Password = $multinewsletter->getConfig('smtp_password');
 			}
 
-			$mail->Subject = $subject;
+			$mail->Subject = $subject .' | '. $clang->getName();
 			$mail->Body = $body;
 			$success = $mail->Send();
 			if(!$success) {
