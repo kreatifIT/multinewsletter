@@ -1,9 +1,18 @@
 <fieldset>
 	<legend>MultiNewsletter Changelog</legend>
 
-	<p>3.2.6-DEV</p>
+	<p>3.2.7-DEV</p>
 	<ul>
-		<li>Ersetzungsvariablen +++LINK_PRIVACY_POLICY+++ und +++LINK_IMPRESS+++ wurden immer nur mit dem Link der Standardsprache ersetzt.</li>
+		<li>Backend: Einstellungen enthalten jetzt eine Option die es ermöglich einzustellen wie der Artikel ausgelesen werden soll, ob Redaxo intern (ohne Output Filter Addons) oder per Socket (mit allen Addons). Dabei ist Redaxo Intern aus Gründen der Rückwärtskompatibilität Standard.</li>
+		<li>Backend: Einstellungen, Setup und Hilfe Tabs rechts eingeordnet um sie vom Inhalt besser zu unterscheiden.</li>
+	</ul>
+	<p>3.2.6</p>
+	<ul>
+		<li>Bugfix: CronJob Log Erfolgsmeldung wurde mehrfach ins Log geschrieben.</li>
+		<li>Bugfix: YForm Module führten zu fatal error wenn Konfiguration noch nicht gespeichert war.</li>
+		<li>Bugfix: Artikelname wurde im Backend beim manuellen Versand unter bestimmten Umständen falsch angezeigt, wenn der Versand unterbrochen wurde und man sich aus Redaxo ausgeloggt hatte.</li>
+		<li>Bugfix: Ersetzungsvariablen +++LINK_PRIVACY_POLICY+++ und +++LINK_IMPRESS+++ wurden immer nur mit dem Link der Standardsprache ersetzt.</li>
+		<li>Verhindert das Löschen von Artikeln wenn sie noch in den MultiNewsletter Einstellungen oder den Gruppen Einstellungen verwendet werden.</li>
 		<li>Artikel wird nun per HTTP Socket gelesen um Addons wie Blöcks, XOutputFilter und SProg nutzbar zu machen. Sollte ein Socket Aufbau fehlschlagen wird der Inhalt des Artikels wie bisher ausgelesen.</li>
 	</ul>
 	<p>3.2.5</p>
