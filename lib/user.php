@@ -284,45 +284,33 @@ class MultinewsletterUser {
      */
 	public function save() {
 		$error = TRUE;
-
+		$sql = rex_sql::factory();
 		$properties = [];
 
-		if ($this->createdate == '') {
-            $this->createdate = date('Y-m-d H:i:s');
-        }
-		if ($this->createip == '') {
-            $this->createip = $_SERVER['REMOTE_ADDR'];
-        }
-        $this->updatedate = date('Y-m-d H:i:s');
-        $this->updateip = $_SERVER['REMOTE_ADDR'];
 
-		foreach (get_object_vars($this) as $key => $value) {
+        $sql->setTable(\rex::getTablePrefix(). '375_user');
+        $sql->setValue('updatedate', date('Y-m-d H:i:s'));
+        $sql->setValue('updateip', $_SERVER['REMOTE_ADDR']);
 
+        foreach (get_object_vars($this) as $key => $value) {
             if ($key == 'group_ids') {
-                $value = "'|". implode('|', $value) ."|'";
+                $value = "|". implode('|', $value) ."|";
             } elseif (is_array($value)) {
                 $value = implode(',', $value);
-            } elseif (is_numeric($value)) {
-                $value = $value;
-            } else {
-                $value = "'". trim($value) ."'";
             }
-            $properties[] = "{$key} = {$value}";
+            $sql->setValue($key, trim($value));
         }
-        $query = \rex::getTablePrefix() ."375_user SET ". implode(', ', $properties);
 
-		if($this->id == 0) {
-			$query = "INSERT INTO ". $query;
-		}
-		else {
-			$query = "UPDATE ". $query ." WHERE id = ". $this->id;
-		}
-		$result = \rex_sql::factory();
-		$result->setQuery($query);
-		if($this->id == 0) {
-			$this->id = $result->getLastId();
-			$error = !$result->hasError();
-		}
+        if ($this->id > 0) {
+            $sql->setWhere('id = :id', ['id' => $this->id]);
+            $sql->update();
+        } else {
+            $sql->setValue('createip', $_SERVER['REMOTE_ADDR']);
+            $sql->setValue('createdate', date('Y-m-d H:i:s'));
+            $sql->insert();
+            $this->id = $sql->getLastId();
+        }
+        $error = !$sql->hasError();
 
 		// Don't forget Mailchimp
         if (MultinewsletterMailchimp::isActive()) {
