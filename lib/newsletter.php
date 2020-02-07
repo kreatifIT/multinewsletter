@@ -388,19 +388,27 @@ class MultinewsletterNewsletter {
                 }
             }
 
-            foreach ($this->attachments as $attachment) {
-                $media = rex_media::get($attachment);
-				if($media instanceof rex_media) {
-					$mail->addAttachment(rex_path::media($attachment), $media->getTitle());
-				}
-            }
-
             $mail->Subject = self::personalize($this->subject, $multinewsletter_user, $article);
             $body = rex_extension::registerPoint(new rex_extension_point('multinewsletterNewsletter.preSend', self::personalize($this->htmlbody, $multinewsletter_user, $article), [
                 'mail' => $mail,
                 'user' => $multinewsletter_user,
             ]));
             $mail->Body = self::replaceURLs($body);
+
+            $attachments = rex_extension::registerPoint(new rex_extension_point('multinewsletterNewsletter.prepareAttachments', $this->attachments, [
+                'mail' => $mail,
+                'article' => $article,
+                'user' => $multinewsletter_user,
+            ]));
+
+            foreach ($attachments as $attachment) {
+                $media = rex_media::get($attachment);
+				if($media instanceof rex_media) {
+					$mail->addAttachment(rex_path::media($attachment), $media->getTitle());
+				} else if (file_exists($attachment)) {
+					$mail->addAttachment($attachment);
+                }
+            }
 
             $doSend = rex_extension::registerPoint(new rex_extension_point('multinewsletterNewsletter.doSend', true, [
                 'mail' => $mail,
