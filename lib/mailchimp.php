@@ -37,7 +37,7 @@ class MultinewsletterMailchimp
 
     public function getLists()
     {
-        $result = $this->request('/lists');
+        $result = $this->request('/lists','GET',["count" => 100]);
         return $result['lists'];
     }
 
@@ -78,6 +78,10 @@ class MultinewsletterMailchimp
         $ch  = curl_init();
         $url = 'https://' . self::$data_center . '.api.mailchimp.com/3.0' . $path;
 //        pr($url);
+
+        if($type == 'GET' && !empty($fields)) {
+            $url = $url.'?'.http_build_query($fields);
+        }
 
         //set the url, number of POST vars, POST data
         curl_setopt($ch, CURLOPT_URL, $url);
